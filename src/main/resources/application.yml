@@ -1,0 +1,9 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://${db.host}:5432/${db.name}
+    username: ${db.user}
+    password: ${db.password}
+db:
+  name: service_template
+server:
+  port: 8082  

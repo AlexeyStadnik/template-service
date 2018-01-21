@@ -1,0 +1,9 @@
+postgres:
+    image: postgres:9.6.6
+    volumes:
+        - ./db/init:/docker-entrypoint-initdb.d
+    environment:
+        - POSTGRES_USER=postgres
+        - POSTGRES_PASSWORD=local
+    ports:
+        - 5432:5432
