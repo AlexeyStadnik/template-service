@@ -10,9 +10,12 @@ buildscript {
     }
 }
 
-apply plugin: 'java'
-apply plugin: 'eclipse'
-apply plugin: 'org.springframework.boot'
+plugins {
+    id "org.springframework.boot" version "1.5.9.RELEASE"
+    id 'java'
+    id 'groovy'
+    id 'idea'
+}
 
 group = 'com.stadnik'
 version = '0.1'
@@ -31,6 +34,8 @@ dependencies {
     compile('org.springframework.boot:spring-boot-starter-web')
     compile group: 'io.springfox', name: 'springfox-swagger2', version: '2.8.0'
 
+    compile group: 'org.testcontainers', name: 'testcontainers', version: '1.5.1'
+
     runtime('org.springframework.boot:spring-boot-devtools')
     runtime('org.postgresql:postgresql')
 
@@ -38,3 +43,24 @@ dependencies {
 
     testCompile('org.springframework.boot:spring-boot-starter-test')
 }
+// Adds custom step to separate test and test-integration steps
+sourceSets {
+    testIntegration {
+        java.srcDir 'src/test-integration/java'
+        resources.srcDir 'src/test-integration/resources'
+        compileClasspath += main.output + test.output
+        runtimeClasspath += main.output + test.output
+    }
+}
+// Taken from https://selimober.com/gradle_unit_integration/
+configurations {
+    testIntegrationCompile.extendsFrom testCompile
+    testIntegrationRuntime.extendsFrom testRuntime
+}
+task testIntegration(type: Test) {
+    testClassesDir = sourceSets.testIntegration.output.classesDir
+    classpath = sourceSets.testIntegration.runtimeClasspath
+}
+
+check.dependsOn testIntegration
+testIntegration.mustRunAfter test
