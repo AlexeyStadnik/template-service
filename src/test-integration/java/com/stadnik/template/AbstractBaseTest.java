@@ -46,7 +46,7 @@ public abstract class AbstractBaseTest {
          * @param configurableApplicationContext Spring context
          */
         @Override
-        public void initialize(ConfigurableApplicationContext configurableApplicationContext) {
+        public final void initialize(final ConfigurableApplicationContext configurableApplicationContext) {
             EnvironmentTestUtils.addEnvironment("testcontainers", configurableApplicationContext.getEnvironment(),
                     "db.host:" + DOCKER_COMPOSE_CONTAINER.getServiceHost(POSTGRES_CONTAINER_NAME, POSTGRES_PORT)
             );
